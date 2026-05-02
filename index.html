@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSMK - Platform Belajar Masa Depan</title>
+    <!-- Chart.js untuk Grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Logic Visibility Section */
+        .page-section { display: none; min-height: 100vh; }
+        .active { display: block; }
+        
+        /* Dashboard & Chart Styling */
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        /* Forum Styling */
+        .forum-input { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .post { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #4A90E2; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        textarea { width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; resize: none; box-sizing: border-box; }
+        
+        /* Video & Grid */
+        .video-placeholder { background: #e0e0e0; height: 150px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #666; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN SECTION -->
+    <div id="login-page" class="page-section active">
+        <div class="login-container">
+            <header>
+                <div class="logo">ES</div>
+                <h1>EduSMK</h1>
+                <p>Bimbel & Tryout SMA/SMK</p>
+            </header>
+            <form onsubmit="navigateTo('dashboard-page'); return false;">
+                <input type="email" placeholder="Email atau nomor HP" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit" class="btn-primary">Masuk</button>
+            </form>
+            <div style="margin: 15px 0; color: #888;">atau</div>
+            <button class="btn-google" onclick="navigateTo('dashboard-page')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20">
+                Lanjut dengan Google
+            </button>
+        </div>
+    </div>
+
+    <!-- GLOBAL NAVBAR -->
+    <nav id="main-nav" class="navbar" style="display: none;">
+        <div class="brand" onclick="navigateTo('dashboard-page')" style="cursor:pointer">EduSMK</div>
+        <div id="nav-title" style="font-weight: bold;">BERANDA</div>
+    </nav>
+
+    <!-- 2. DASHBOARD SECTION -->
+    <div id="dashboard-page" class="page-section">
+        <div class="content">
+            <h2>Halo, Pelajar SMK! 👋</h2>
+            
+            <!-- Learning Progress Chart -->
+            <div class="chart-container">
+                <h4 style="margin-top:0">Progres Belajar Mingguan</h4>
+                <canvas id="learningChart"></canvas>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Video Belajar</h3>
+                    <p>Materi Teknik & Bisnis lengkap.</p>
+                    <button class="btn-primary" onclick="navigateTo('video-page')">Tonton</button>
+                </div>
+                <div class="card">
+                    <h3>Tryout Online</h3>
+                    <p>Simulasi SNBT & Kejuruan.</p>
+                    <button class="btn-primary" onclick="navigateTo('tryout-page')">Mulai</button>
+                </div>
+                <div class="card">
+                    <h3>Forum Diskusi</h3>
+                    <p>Tanya jawab antar siswa SMK.</p>
+                    <button class="btn-primary" onclick="navigateTo('forum-page')">Buka Forum</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. VIDEO SECTION -->
+    <div id="video-page" class="page-section">
+        <div class="content">
+            <button onclick="navigateTo('dashboard-page')" class="btn-secondary" style="margin-bottom:20px;">← Kembali</button>
+            <h2>Materi Video Kejuruan</h2>
+            <div class="card-grid">
+                <div class="card"><div class="video-placeholder">▶</div><h4>Rekayasa Perangkat Lunak</h4><p>15:00</p></div>
+                <div class="card"><div class="video-placeholder">▶</div><h4>Manajemen Bisnis</h4><p>12:45</p></div>
+                <div class="card"><div class="video-placeholder">▶</div><h4>Teknik Jaringan</h4><p>20:10</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. TRYOUT SECTION -->
+    <div id="tryout-page" class="page-section">
+        <div class="content">
+            <button onclick="navigateTo('dashboard-page')" class="btn-secondary" style="margin-bottom:20px;">← Keluar</button>
+            <div class="card" style="max-width: 600px; margin: auto;">
+                <h3>Soal 1: Requirements Engineering</h3>
+                <p>Apa istilah untuk proses menggali kebutuhan dari stakeholder?</p>
+                <div style="text-align: left; margin: 20px 0;">
+                    <label><input type="radio" name="q1"> Requirements Elicitation</label><br><br>
+                    <label><input type="radio" name="q1"> Beta Testing</label><br><br>
+                    <label><input type="radio" name="q1"> Deployment</label>
+                </div>
+                <button class="btn-primary" onclick="submitTryout()">Kirim Jawaban</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. FORUM SECTION -->
+    <div id="forum-page" class="page-section">
+        <div class="content">
+            <button onclick="navigateTo('dashboard-page')" class="btn-secondary" style="margin-bottom:20px;">← Kembali</button>
+            <div class="forum-input">
+                <h3>Diskusi Baru</h3>
+                <textarea id="forumInput" placeholder="Tanyakan materi yang sulit di sini..."></textarea>
+                <button class="btn-primary" style="margin-top:10px; width: auto;" onclick="postToForum()">Kirim Postingan</button>
+            </div>
+            <div id="forumPosts">
+                <div class="post"><b>Naira Septina:</b> Semangat buat yang mau ujian besok! 🔥</div>
+                <div class="post"><b>Admin:</b> Jangan lupa cek jadwal Tryout terbaru di dashboard.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let myChart = null; // Variable untuk menyimpan instance chart
+
+        // 1. Navigation Logic
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            const nav = document.getElementById('main-nav');
+            if (pageId === 'login-page') {
+                nav.style.display = 'none';
+            } else {
+                nav.style.display = 'flex';
+                document.getElementById('nav-title').innerText = pageId.replace('-page', '').toUpperCase();
+                
+                if(pageId === 'dashboard-page') {
+                    setTimeout(initChart, 100);
+                }
+            }
+            window.scrollTo(0,0);
+        }
+
+        // 2. Chart Logic
+        function initChart() {
+            const ctx = document.getElementById('learningChart').getContext('2d');
+            if (myChart) myChart.destroy(); // Hapus chart lama agar tidak tumpang tindih
+            
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                    datasets: [{
+                        label: 'Menit Belajar',
+                        data: [40, 60, 20, 90, 120, 50, 80],
+                        borderColor: '#4A90E2',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(74, 144, 226, 0.1)'
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+        }
+
+        // 3. Forum Logic
+        function postToForum() {
+            const input = document.getElementById('forumInput');
+            if (!input.value.trim()) return;
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = `<b>Kamu:</b> ${input.value}`;
+            document.getElementById('forumPosts').prepend(post);
+            input.value = "";
+        }
+
+        // 4. Tryout Logic
+        function submitTryout() {
+            alert("Jawaban berhasil dikirim! Nilai kamu: 100");
+            navigateTo('dashboard-page');
+        }
+    </script>
+</body>
+</html>
